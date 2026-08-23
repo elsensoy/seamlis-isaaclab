@@ -5,7 +5,7 @@
 
 # SEAMLIS
 
-`seamlis` is a **safe exploration and mapping framework** utilizing [`safe_control`](https://www.google.com/search?q=%5Bhttps://github.com/tkkim-robot/safe_control%5D(https://github.com/tkkim-robot/safe_control)) for 2D planning and **Isaac Lab / Isaac Sim** for photorealistic, GPU-accelerated 3D simulation.
+`seamlis` is a **safe exploration and mapping framework** utilizing [`safe_control`](https://github.com/tkkim-robot/safe_control) for 2D planning and **Isaac Lab / Isaac Sim** for photorealistic, GPU-accelerated 3D simulation.
 
 It features a modular architecture that bridges high-level CBF-based planners with low-level physics simulation, all running inside a containerized environment with full GUI support.
 
@@ -18,7 +18,7 @@ Use these links to jump directly to the part of the project you want to explore:
 | [Isaac Lab implementation](#core-logic) | How the planar exploration stack, safety controllers, adapter, and 3D simulation work together. |
 | [System overview](#system-overview) | How the planner, Isaac simulation, and adapter work together. |
 | [Assets](#assets) | Drone and environment asset information. |
-| [Installation and running](docs/INSTALLATION_AND_RUNNING.md) | Host setup, Docker, Isaac Lab, simulation commands, and troubleshooting. |
+| [Installation and running](INSTALLATION_AND_RUNNING.md) | Host setup, Docker, Isaac Lab, simulation commands, and troubleshooting. |
 | [Architecture](#architecture) | Planner, simulation, and adapter code responsibilities. |
 | [Experiment configuration](#configuration) | YAML configuration structure and controller selection. |
 | [Outputs and logging](#outputs) | Visualizations, data logs, collision summaries, and detection logs. |
@@ -148,7 +148,7 @@ We use NVIDIA's stock Isaac Sim demo warehouse (`Isaac/Environments/Simple_Wareh
 
 Setup requirements, Docker and Isaac Lab installation, container startup,
 simulation commands, headless benchmark commands, and troubleshooting are in
-[Installation and Running](docs/INSTALLATION_AND_RUNNING.md).
+[Installation and Running](INSTALLATION_AND_RUNNING.md).
 
 <a id="architecture"></a>
 
