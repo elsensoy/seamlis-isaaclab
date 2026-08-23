@@ -352,7 +352,7 @@ https://github.com/user-attachments/assets/96f13270-0b98-4c6d-b46e-45a7a02932c9
 
 **Gatekeeper LiDAR**
 
-https://github.com/user-attachments/assets/68a8a065-2a9b-4068-8c29-ad545a0b7e0a
+https://github.com/user-attachments/assets/05056e07-8174-42cd-a595-ee3aaaf40ea7
 
 ### Example configurations
 
