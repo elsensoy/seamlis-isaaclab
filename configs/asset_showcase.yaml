@@ -1,0 +1,39 @@
+# Not an experiment -- a single drone in an empty, obstacle-free map, purely
+# to show off the custom drone asset in flight for the README's Assets
+# section. Paired with a close, cinematic tracking camera via
+# --force-track-robot 0 --track-offset (see the recording command), instead
+# of the wider offset used for actual experiment recordings.
+experiment_name: "Asset_Showcase"
+dt: 0.05
+exploration_algorithm: CoScan
+show_animation: false
+max_ticks: 400
+
+environment:
+  width: 16.0
+  height: 10.0
+  resolution: 0.1
+  circles: []
+  superellipsoids: []
+  unknown_obstacles: []
+
+robots:
+  common:
+    model: DoubleIntegrator2D
+    sensor: rgbd
+    exploration: true
+    reached_threshold: 2.0
+    radius: 0.25
+    cam_range: 5.0
+    fov_angle: 80.0
+  instances:
+    - robot_id: 0
+      # Start centered so there's room to roam in every direction, yaw pointed
+      # southwest (-3pi/4) so the drone starts facing the tracking camera,
+      # which sits at drone_pos + (-1,-1,0.6) -- see --track-offset in the
+      # recording command.
+      x0: [8.0, 5.0, 0.0, 0.0, -2.3561944901923448]
+
+controller:
+  pos: mpc_cbf
+  att: gatekeeper

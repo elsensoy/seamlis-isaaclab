@@ -1,0 +1,33 @@
+experiment:
+  name: VAL_02_near_miss_fail
+  dt: 0.05
+  exploration_algorithm: CoScan
+  show_animation: false
+  save_animation: false
+  max_ticks: 2000
+
+environment:
+  width: 20.0
+  height: 18.0
+  resolution: 0.1
+  circles: []
+  superellipsoids: []
+  unknown_obstacles:
+    - [6.0, 6.0, 0.36]
+
+robots:
+  common:
+    model: DoubleIntegrator2D
+    sensor: rgbd
+    exploration: true
+    reached_threshold: 2.0
+    radius: 0.25
+    cam_range: 5.0
+    fov_angle: 80.0
+  instances:
+    - robot_id: 0
+      x0: [2.0, 2.0, 0.0, 0.0, 0.0]
+
+controller:
+  pos: mpc_cbf
+  att: gatekeeper

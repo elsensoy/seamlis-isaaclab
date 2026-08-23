@@ -1,0 +1,65 @@
+# Recording-only variant of test_5_start_in_contact.yaml: same collision
+# semantics (robot 0 spawns already within collision range of an unknown
+# obstacle), but on a bigger 5-robot, richer-obstacle layout matching the
+# other _isaac variants recorded alongside it (26x20 map, dimensions proven
+# clean of warehouse shelf overlap via the stress-test recording). Robots
+# 1-4 and the 5 known + 4 "between" unknown obstacles are shared scenery --
+# the actual start-in-contact test is robot 0 versus the obstacle at (2,2).
+#
+# Robot 0 is offset 0.75m from the obstacle center (radius 0.6 + robot
+# radius 0.25 = 0.85m collision threshold, so 0.75m is comfortably inside
+# it) rather than spawned at the exact same point -- landing the drone mesh
+# exactly on top of the obstacle's center looked like a rendering glitch
+# (the drone teleported inside solid geometry) rather than a collision.
+# Facing 0 rad (+x, directly at the obstacle) so it reads as "just ran
+# into it nose-first" instead of an arbitrary orientation.
+experiment:
+  name: VAL_01_start_in_collision
+  dt: 0.05
+  exploration_algorithm: CoScan
+  show_animation: false
+  save_animation: false
+  max_ticks: 1200
+
+environment:
+  width: 26.0
+  height: 20.0
+  resolution: 0.15
+  circles:
+    - [8.0, 8.0, 0.5]
+    - [18.0, 8.0, 0.5]
+    - [8.0, 12.0, 0.5]
+    - [18.0, 12.0, 0.5]
+    - [13.0, 10.0, 0.6]
+  superellipsoids: []
+  unknown_obstacles:
+    - [2.0, 2.0, 0.6]     # the start-in-contact obstacle, exactly at robot 0's spawn
+    - [10.5, 9.0, 0.3]    # between known circles (8,8) and (13,10)
+    - [15.5, 9.0, 0.3]    # between known circles (18,8) and (13,10)
+    - [10.5, 11.0, 0.3]   # between known circles (8,12) and (13,10)
+    - [15.5, 11.0, 0.3]   # between known circles (18,12) and (13,10)
+
+robots:
+  common:
+    model: DoubleIntegrator2D
+    sensor: rgbd
+    exploration: true
+    reached_threshold: 2.0
+    radius: 0.25
+    cam_range: 5.0
+    fov_angle: 80.0
+  instances:
+    - robot_id: 0
+      x0: [1.25, 2.0, 0.0, 0.0, 0.0]
+    - robot_id: 1
+      x0: [2.0, 18.0, 0.0, 0.0, -0.785398]
+    - robot_id: 2
+      x0: [24.0, 2.0, 0.0, 0.0, 2.356194]
+    - robot_id: 3
+      x0: [24.0, 18.0, 0.0, 0.0, -2.356194]
+    - robot_id: 4
+      x0: [13.0, 2.0, 0.0, 0.0, 1.570796]
+
+controller:
+  pos: mpc_cbf
+  att: gatekeeper

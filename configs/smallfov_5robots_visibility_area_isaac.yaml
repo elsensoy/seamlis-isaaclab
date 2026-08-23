@@ -1,0 +1,54 @@
+# Recording-only variant of test_11_visibilityarea_unknown_smallfov.yaml.yaml:
+# same environment as smallfov_5robots_gatekeeper_isaac.yaml (identical
+# robots/obstacles), only controller.att differs -- visibility-area
+# counterpart for the small-FOV comparison.
+experiment_name: "SmallFoV_5Robots_VisibilityArea"
+dt: 0.05
+tf: 60.0
+exploration_algorithm: CoScan
+show_animation: false
+max_ticks: 1200
+
+environment:
+  width: 26.0
+  height: 20.0
+  resolution: 0.15
+  circles:
+    - [8.0, 8.0, 0.5]
+    - [18.0, 8.0, 0.5]
+    - [8.0, 12.0, 0.5]
+    - [18.0, 12.0, 0.5]
+    - [13.0, 10.0, 0.6]
+  superellipsoids: []
+  unknown_obstacles:
+    - [6.0, 6.0, 0.6]
+    - [9.0, 9.0, 0.6]
+    - [10.5, 9.0, 0.3]
+    - [15.5, 9.0, 0.3]
+    - [10.5, 11.0, 0.3]
+    - [15.5, 11.0, 0.3]
+
+robots:
+  common:
+    model: DoubleIntegrator2D
+    sensor: rgbd
+    exploration: true
+    reached_threshold: 2.0
+    radius: 0.25
+    cam_range: 4.0
+    fov_angle: 40.0
+  instances:
+    - robot_id: 0
+      x0: [2.0, 2.0, 0.0, 0.0, 0.785398]
+    - robot_id: 1
+      x0: [2.0, 18.0, 0.0, 0.0, -0.785398]
+    - robot_id: 2
+      x0: [24.0, 2.0, 0.0, 0.0, 2.356194]
+    - robot_id: 3
+      x0: [24.0, 18.0, 0.0, 0.0, -2.356194]
+    - robot_id: 4
+      x0: [13.0, 2.0, 0.0, 0.0, 1.570796]
+
+controller:
+  pos: mpc_cbf
+  att: visibility_area

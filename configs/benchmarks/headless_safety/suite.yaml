@@ -1,0 +1,34 @@
+suite_name: headless_visibility_safety
+description: >-
+  Deterministic, headless regression scenarios for comparing exploration and
+  attitude-control behavior under limited sensing.
+
+scenarios:
+  - indoor_stress.yaml
+  - blind_corner.yaml
+  - decentralized_hidden_obstacle.yaml
+  - small_fov_zigzag.yaml
+
+algorithms:
+  - Frontier
+  - CoScan
+
+# Local controller names used in the comparison:
+# simple = constant yaw-rate, visibility_area = visibility promoting,
+# velocity_tracking_yaw = velocity tracking, gatekeeper = SEAMLiS.
+attitudes:
+  - simple
+  - visibility_area
+  - velocity_tracking_yaw
+  - gatekeeper
+
+repeats: 1
+master_seed: 20260821
+coverage_target: 0.98
+use_astar: true
+
+# Shorter team-size-specific timeouts keep comparisons consistent.
+timeouts_s:
+  1: 160.0
+  2: 80.0
+  3: 60.0

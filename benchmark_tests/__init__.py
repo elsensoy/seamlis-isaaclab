@@ -1,0 +1,2 @@
+"""Lightweight benchmark configuration tests."""
+

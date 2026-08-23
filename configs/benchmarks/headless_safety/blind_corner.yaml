@@ -1,0 +1,55 @@
+experiment_name: headless_blind_corner_r1
+dt: 0.1
+tf: 160.0
+exploration_algorithm: Frontier
+show_animation: false
+max_ticks: 1600
+seed: 102
+
+environment:
+  width: 24.0
+  height: 18.0
+  resolution: 0.16
+  use_default_layout: false
+  circles:
+    - [5.2, 2.2, 0.40]
+    - [5.2, 10.8, 0.40]
+    - [12.0, 14.5, 0.45]
+    - [19.0, 5.0, 0.45]
+  # An L-shaped known partition with a hidden obstacle just beyond the turn.
+  superellipsoids:
+    - [7.0, 5.0, 4.5, 0.30, 10.0, 0.0]
+    - [11.2, 8.3, 0.30, 3.6, 10.0, 0.0]
+  unknown_obstacles:
+    - [12.35, 10.15, 0.38]
+    - [15.8, 7.4, 0.30]
+    - [20.0, 13.0, 0.32]
+
+controller:
+  pos: mpc_cbf
+  att: gatekeeper
+  gatekeeper:
+    nominal: visibility_area
+    backup: velocity_tracking_yaw
+    nominal_horizon: 1.3
+    backup_horizon: 1.2
+    horizon_discount: 0.05
+    braking_margin: 0.9
+
+robots:
+  common:
+    model: DoubleIntegrator2D
+    radius: 0.15
+    v_max: 1.5
+    a_max: 2.0
+    fov_angle: 70.0
+    cam_range: 4.5
+    mpc_horizon: 10
+    mpc_cbf_alpha1: 0.55
+    mpc_cbf_alpha2: 0.55
+    unknown_obs_detection: fov
+    visibility_violation_mode: point_mass
+    visibility_violation_tolerance: 0.02
+  instances:
+    - robot_id: 0
+      x0: [2.0, 2.0, 0.0]

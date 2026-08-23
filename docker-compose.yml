@@ -1,0 +1,79 @@
+services:
+  seamlis:
+    build: .
+    container_name: seamlis
+    gpus: all
+    environment:
+      ACCEPT_EULA: "Y"
+      OMNI_KIT_ALLOW_ROOT: "1"
+      DISPLAY: "${DISPLAY}"                    # inherited from shell session
+      QT_QPA_PLATFORM: "xcb"
+      SDL_VIDEODRIVER: "x11"
+      XDG_RUNTIME_DIR: "/tmp"
+      PYTHONWARNINGS: "ignore:The opcua feature is not available:UserWarning"
+      __GLX_VENDOR_LIBRARY_NAME: "nvidia"
+      HOME: "/home/ubuntu"
+      XAUTHORITY: "/home/ubuntu/.Xauthority"
+      PYTHONPATH: "/workspace/isaaclab/source:/workspace/isaaclab/source/isaaclab:/workspace/seamlis"
+    # Dockerfile runs as `ubuntu` (uid 1000), not root -- HOME/XAUTHORITY and the
+    # X cookie mount below all point at ubuntu's home, not /root.
+    devices:
+      - "/dev/dri:/dev/dri"
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro
+      - "${XAUTHORITY:-$HOME/.Xauthority}:/home/ubuntu/.Xauthority:ro"   # host X cookie, wherever it lives
+      - isaac_omniverse:/home/ubuntu/.nvidia-omniverse
+      - isaac_cache_ov:/home/ubuntu/.cache/ov
+      - isaac_cache_pip:/home/ubuntu/.cache/pip
+      - isaac_cache_kit:/home/ubuntu/.cache/kit
+      - .:/workspace/seamlis:rw
+      # Isaac Lab source: defaults to a sibling folder ../IsaacLab/source.
+      # Override by setting ISAACLAB_SOURCE in .env if it lives elsewhere.
+      - "${ISAACLAB_SOURCE:-../IsaacLab/source}:/workspace/isaaclab/source:ro"
+    working_dir: /workspace/seamlis
+    stdin_open: true
+    tty: true
+    entrypoint: ["/workspace/isaaclab/_isaac_sim/python.sh"]
+    command: ["/workspace/seamlis/simulation.py"]
+
+  seamlis-dev:
+    build: .
+    container_name: seamlis-dev
+    healthcheck:
+      disable: true
+    gpus: all
+    environment:
+      ACCEPT_EULA: "Y"
+      OMNI_KIT_ALLOW_ROOT: "1"
+      DISPLAY: "${DISPLAY}"
+      QT_QPA_PLATFORM: "xcb"
+      SDL_VIDEODRIVER: "x11"
+      __GLX_VENDOR_LIBRARY_NAME: "nvidia"
+      HOME: "/home/ubuntu"
+      XAUTHORITY: "/home/ubuntu/.Xauthority"
+      PYTHONPATH: "/workspace/isaaclab/source:/workspace/isaaclab/source/isaaclab:/workspace/seamlis"
+      HEADLESS: "0"
+    shm_size: '2g'
+    devices:
+      - "/dev/dri:/dev/dri"
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro
+      - "${XAUTHORITY:-$HOME/.Xauthority}:/home/ubuntu/.Xauthority:ro"
+      - isaac_omniverse:/home/ubuntu/.nvidia-omniverse
+      - isaac_cache_ov:/home/ubuntu/.cache/ov
+      - isaac_cache_pip:/home/ubuntu/.cache/pip
+      - isaac_cache_kit:/home/ubuntu/.cache/kit
+      - .:/workspace/seamlis:rw
+      - ./kit-cache:/workspace/outputs
+      - "${ISAACLAB_SOURCE:-../IsaacLab/source}:/workspace/isaaclab/source:ro"
+    working_dir: /workspace/seamlis
+    stdin_open: true
+    tty: true
+    entrypoint: ["/bin/bash", "-lc"]
+    command: ["sleep infinity"]
+
+volumes:
+  isaac_omniverse:
+  isaac_cache_ov:
+  isaac_cache_pip:
+  isaac_cache_kit:

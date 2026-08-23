@@ -1,0 +1,49 @@
+experiment:
+  name: EXP_04_sparse_forest_15_visibility_area
+  dt: 0.05
+  exploration_algorithm: CoScan
+  show_animation: false
+  save_animation: false
+  max_ticks: 5000
+
+environment:
+  width: 20.0
+  height: 18.0
+  resolution: 0.1
+  circles: []
+  superellipsoids: []
+  unknown_obstacles:
+    - [3.0, 4.0, 0.25]
+    - [4.5, 7.0, 0.25]
+    - [6.0, 3.5, 0.25]
+    - [7.5, 8.0, 0.25]
+    - [9.0, 5.0, 0.25]
+    - [10.5, 6.5, 0.25]
+    - [12.0, 4.0, 0.25]
+    - [13.5, 7.5, 0.25]
+    - [15.0, 5.5, 0.25]
+    - [5.0, 12.0, 0.25]
+    - [8.0, 12.5, 0.25]
+    - [11.0, 11.5, 0.25]
+    - [14.0, 12.0, 0.25]
+    - [16.0, 10.0, 0.25]
+    - [17.0, 13.0, 0.25]
+
+robots:
+  common:
+    model: DoubleIntegrator2D
+    sensor: rgbd
+    exploration: true
+    reached_threshold: 2.0
+    radius: 0.25
+    cam_range: 5.0
+    fov_angle: 70.0
+  instances:
+    - robot_id: 0
+      x0: [9.5, 9.0, 0.0, 0.0, 3.141593]
+    - robot_id: 1
+      x0: [10.5, 9.0, 0.0, 0.0, 0.0]
+
+controller:
+  pos: mpc_cbf
+  att: visibility_area

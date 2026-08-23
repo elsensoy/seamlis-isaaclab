@@ -1,0 +1,87 @@
+experiment:
+  name: EXP_01_indoor_exploration_gatekeeper
+  dt: 0.1
+  tf: 300.0
+  exploration_algorithm: Frontier # choices: CoScan, Frontier
+  map_resolution: 0.16
+  coverage_target: 0.98
+  use_astar: true
+  show_animation: true
+  save_animation: false
+  no_render: false
+
+environment:
+  layout: indoor # used to toggle between build_indoor and build_open logic
+  width: 24.0
+  height: 18.0
+  unknown_profile: default # choices: default, stress
+  
+  # Known Obstacles (Manual overrides if not using layout defaults)
+  circles:
+    - [1.9609824671993221, 3.571635852132964, 0.34050950984221157]
+    - [1.676274334947608, 14.685978826913212, 0.34888886514506134]
+    - [10.154313911104943, 6.197057802522608, 0.31567569237250975]
+    - [11.172968489948397, 13.709415691971323, 0.44]
+    - [12.840940316109451, 5.668353014220707, 0.28]
+    - [17.84911288084617, 6.673288202225253, 0.35923213699101575]
+    - [20.74134371070081, 14.657228646665182, 0.4132990115393822]
+    - [19.49278534976608, 9.762322881834, 0.3082173123587094]
+  # Interior Walls: [x, y, half_width, half_height, height, unknown1, unknown2]
+  walls:
+    - [16.0, 0.6, 0.35, 0.6, 2.0, 0.0, 1.0] 
+
+robots:
+  common:
+    model: DoubleIntegrator2D
+    v_max: 1.35
+    a_max: 1.9
+    radius: 0.15
+    sensor: rgbd
+    fov_angle: 70.0
+    cam_range: 4.5
+    num_constraints: 20
+    reached_threshold: 1.8
+    min_goal_distance: 2.6
+    nominal_k_v: 2.2
+    nominal_k_a: 2.2
+    unknown_obs_detection: fov
+    exploration: true
+    visibility_violation_mode: point_mass
+    visibility_violation_tolerance: 0.02
+    unknown_obs_persistent_fov: true
+
+    # New Deadlock Recovery Parameters
+    deadlock:
+      window_s: 3.0
+      position_eps: 0.28
+      speed_eps: 0.06
+      goal_margin: 0.9
+      cooldown_s: 3.5
+      max_recoveries: 12
+
+    # New MPC/CBF Specifics
+    mpc:
+      horizon: 10
+      cbf_alpha1: 0.55
+      cbf_alpha2: 0.55
+
+  instances:
+    - robot_id: 0
+      x0: [2.0, 2.0, 0.0] # [x, y, yaw]
+    - robot_id: 1
+      x0: [2.0, 16.0, -1.5707]
+
+controller:
+  pos: mpc_cbf # choices: cbf_qp, mpc_cbf
+  att: gatekeeper # choices: velocity_tracking_yaw, gatekeeper, etc.
+  
+  # Gatekeeper Specific logic
+  gatekeeper:
+    nominal: visibility_area
+    backup: velocity_tracking_yaw
+    nominal_horizon: 0.4
+    backup_horizon: 1.8
+    event_offset: 0.0
+    horizon_discount: 0.05
+    validation_slack: 0.30
+    braking_margin: 0.90

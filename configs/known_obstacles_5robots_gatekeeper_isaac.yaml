@@ -1,0 +1,74 @@
+# Recording-only variant of test_8_gatekeeperknown.yaml: same environment as
+# known_obstacles_5robots_visibility_area_isaac.yaml (identical
+# robots/obstacles), only controller.att differs -- gatekeeper counterpart
+# for the RGB-D known-obstacle comparison.
+experiment_name: "Known_Obstacles_5Robots_Gatekeeper"
+dt: 0.05
+tf: 60.0
+exploration_algorithm: CoScan
+show_animation: false
+max_ticks: 1200
+
+environment:
+  width: 26.0
+  height: 20.0
+  resolution: 0.15
+
+  circles:
+    - [5.0, 5.0, 0.2]
+    - [5.8, 5.0, 0.2]
+    - [8.0, 8.0, 0.5]
+    - [18.0, 8.0, 0.5]
+    - [8.0, 12.0, 0.5]
+    - [18.0, 12.0, 0.5]
+    - [13.0, 10.0, 0.6]
+
+  superellipsoids:
+    - [17.0, 6.0, 1.0, 1.5, 10.0, 0.785398]
+    - [9.0, 15.0, 0.5, 1.3, 10.0, -0.261799]
+
+  unknown_obstacles:
+    - [10.5, 9.0, 0.3]
+    - [15.5, 9.0, 0.3]
+    - [10.5, 11.0, 0.3]
+    - [15.5, 11.0, 0.3]
+
+robots:
+  common:
+    model: DoubleIntegrator2D
+    sensor: rgbd
+    exploration: true
+    reached_threshold: 2.0
+    radius: 0.25
+
+  instances:
+    - robot_id: 0
+      x0: [2.0, 2.0, 0.0, 0.0, 0.785398]
+      cam_range: 5.0
+      fov_angle: 70.0
+    - robot_id: 1
+      x0: [2.0, 18.0, 0.0, 0.0, -0.785398]
+      cam_range: 6.0
+      fov_angle: 80.0
+    - robot_id: 2
+      x0: [24.0, 2.0, 0.0, 0.0, 2.356194]
+      cam_range: 7.0
+      fov_angle: 90.0
+    - robot_id: 3
+      x0: [24.0, 18.0, 0.0, 0.0, -2.356194]
+      cam_range: 4.5
+      fov_angle: 60.0
+    - robot_id: 4
+      x0: [13.0, 2.0, 0.0, 0.0, 1.570796]
+      cam_range: 5.5
+      fov_angle: 75.0
+
+controller:
+  pos: mpc_cbf
+  att: gatekeeper
+  gatekeeper:
+    nominal: visibility_area
+    backup: velocity_tracking_yaw
+    nominal_horizon: 0.4
+    backup_horizon: 1.8
+    braking_margin: 0.9

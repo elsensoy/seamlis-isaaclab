@@ -1,0 +1,74 @@
+# Recording-only variant of test_7_gatekeeper_known.yaml: same idea (known
+# obstacles only, no unknowns... except see below, heterogeneous per-robot
+# FoV/range, RGB-D sensor), scaled from 2 to 5 robots and from 4 to 9 known
+# obstacles (the original small circle pair + 2 angled walls, repositioned,
+# plus 5 more shared with the other _isaac variants recorded alongside this
+# one), with 4 unknown obstacles interspersed between the known ones. 26x20
+# map, dimensions proven clean of warehouse shelf overlap via the stress-test
+# recording. Visibility-area controller -- paired with
+# known_obstacles_5robots_gatekeeper_isaac.yaml (identical environment/robots,
+# only controller.att differs).
+experiment_name: "Known_Obstacles_5Robots_VisibilityArea"
+dt: 0.05
+tf: 60.0
+exploration_algorithm: CoScan
+show_animation: false
+max_ticks: 1200
+
+environment:
+  width: 26.0
+  height: 20.0
+  resolution: 0.15
+
+  circles:
+    - [5.0, 5.0, 0.2]
+    - [5.8, 5.0, 0.2]
+    - [8.0, 8.0, 0.5]
+    - [18.0, 8.0, 0.5]
+    - [8.0, 12.0, 0.5]
+    - [18.0, 12.0, 0.5]
+    - [13.0, 10.0, 0.6]
+
+  superellipsoids:
+    - [17.0, 6.0, 1.0, 1.5, 10.0, 0.785398]
+    - [9.0, 15.0, 0.5, 1.3, 10.0, -0.261799]
+
+  unknown_obstacles:
+    - [10.5, 9.0, 0.3]
+    - [15.5, 9.0, 0.3]
+    - [10.5, 11.0, 0.3]
+    - [15.5, 11.0, 0.3]
+
+robots:
+  common:
+    model: DoubleIntegrator2D
+    sensor: rgbd
+    exploration: true
+    reached_threshold: 2.0
+    radius: 0.25
+
+  instances:
+    - robot_id: 0
+      x0: [2.0, 2.0, 0.0, 0.0, 0.785398]
+      cam_range: 5.0
+      fov_angle: 70.0
+    - robot_id: 1
+      x0: [2.0, 18.0, 0.0, 0.0, -0.785398]
+      cam_range: 6.0
+      fov_angle: 80.0
+    - robot_id: 2
+      x0: [24.0, 2.0, 0.0, 0.0, 2.356194]
+      cam_range: 7.0
+      fov_angle: 90.0
+    - robot_id: 3
+      x0: [24.0, 18.0, 0.0, 0.0, -2.356194]
+      cam_range: 4.5
+      fov_angle: 60.0
+    - robot_id: 4
+      x0: [13.0, 2.0, 0.0, 0.0, 1.570796]
+      cam_range: 5.5
+      fov_angle: 75.0
+
+controller:
+  pos: mpc_cbf
+  att: visibility_area

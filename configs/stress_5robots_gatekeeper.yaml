@@ -1,0 +1,82 @@
+# 5-robot stress test: 12 known obstacles (10 circles + 2 wall segments) and
+# 8 unknown obstacles (20 total), modeled on
+# configs/benchmarks/headless_safety/indoor_stress.yaml but scaled up from 3
+# to 5 robots and roughly 19 to 20 obstacles. Gatekeeper variant -- paired
+# with stress_5robots_visibility_area.yaml (identical environment/robots,
+# only controller.att differs) for a side-by-side comparison.
+experiment_name: "Stress_5Robots_Gatekeeper"
+dt: 0.1
+tf: 80.0
+exploration_algorithm: "Frontier"
+show_animation: False
+max_ticks: 800
+
+environment:
+  width: 26.0
+  height: 20.0
+  resolution: 0.15
+  use_default_layout: False
+
+  circles:
+    - [4.0, 4.0, 0.5]
+    - [4.0, 16.0, 0.5]
+    - [22.0, 4.0, 0.5]
+    - [22.0, 16.0, 0.5]
+    - [13.0, 10.0, 0.6]
+    - [8.0, 7.0, 0.4]
+    - [18.0, 13.0, 0.4]
+    - [8.0, 13.0, 0.4]
+    - [18.0, 7.0, 0.4]
+    - [13.0, 4.0, 0.35]
+
+  # [x, y, half_width, half_height, exponent, angle_rad]
+  superellipsoids:
+    - [13.0, 17.0, 3.5, 0.4, 10.0, 0.0]
+    - [13.0, 3.0, 3.5, 0.4, 10.0, 0.0]
+
+  unknown_obstacles:
+    - [10.0, 10.0, 0.35]
+    - [16.0, 10.0, 0.35]
+    - [13.0, 7.0, 0.3]
+    - [13.0, 13.0, 0.3]
+    - [6.0, 10.0, 0.3]
+    - [20.0, 10.0, 0.3]
+    - [10.0, 14.0, 0.3]
+    - [16.0, 6.0, 0.3]
+
+controller:
+  pos: mpc_cbf
+  att: gatekeeper
+  gatekeeper:
+    nominal: visibility_area
+    backup: velocity_tracking_yaw
+    nominal_horizon: 1.3
+    backup_horizon: 1.2
+    horizon_discount: 0.05
+    braking_margin: 0.9
+
+robots:
+  common:
+    model: DoubleIntegrator2D
+    radius: 0.15
+    v_max: 1.5
+    a_max: 2.0
+    fov_angle: 70.0
+    cam_range: 4.5
+    mpc_horizon: 10
+    mpc_cbf_alpha1: 0.55
+    mpc_cbf_alpha2: 0.55
+    unknown_obs_detection: fov
+    visibility_violation_mode: point_mass
+    visibility_violation_tolerance: 0.02
+  instances:
+    - robot_id: 0
+      x0: [2.0, 2.0, 0.785398]
+    - robot_id: 1
+      x0: [2.0, 18.0, -0.785398]
+    - robot_id: 2
+      x0: [24.0, 2.0, 2.356194]
+    - robot_id: 3
+      x0: [24.0, 18.0, -2.356194]
+    - robot_id: 4
+      x0: [13.0, 2.0, 1.570796]

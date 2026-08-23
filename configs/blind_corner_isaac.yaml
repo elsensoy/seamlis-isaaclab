@@ -1,0 +1,74 @@
+# Ported from configs/test_1_blind_corner_visibility_area.yaml into the flat
+# schema run_isaac.py actually reads (the old nested `experiment:` key gets
+# silently ignored by pydantic, falling back to defaults -- this makes the
+# intended dt/exploration_algorithm explicit instead of accidental).
+# Geometry (walls/circles/original hidden obstacle) kept as-is; a few more
+# unknown obstacles added per request to raise the odds of an unknown-obstacle
+# hit specifically, not just the known-wall scrape this produced originally.
+experiment_name: "Blind_Corner_Demo"
+dt: 0.1
+tf: 60.0
+exploration_algorithm: "Frontier"
+show_animation: False
+max_ticks: 950
+
+environment:
+  width: 20.0
+  height: 18.0
+  resolution: 0.1
+  use_default_layout: False
+
+  circles:
+    - [6.0, 2.0, 0.6]
+    - [6.0, 3.5, 0.6]
+    - [6.0, 5.0, 0.6]
+
+  # Known walls forming an L-shaped corridor (original design).
+  superellipsoids:
+    - [10.0, 5.0, 10.0, 0.5, 10.0, 0.0]   # Horizontal Wall (Bottom)
+    - [5.0, 10.0, 0.5, 5.0, 10.0, 0.0]    # Vertical Wall (Left)
+    - [10.0, 15.0, 5.0, 0.5, 10.0, 0.0]   # Horizontal Wall (Top)
+
+  unknown_obstacles:
+    - [7.0, 7.0, 0.6]    # original hidden "trap" around the bend
+    # Robot 1 (spawn 2,10) reliably runs into this one on its way toward its
+    # frontier goal (4.35, 8.55) -- confirmed repeatable, and far enough from
+    # any warehouse wall corner for a clean camera shot (unlike anything
+    # placed near robot 0's spawn at (2,2), which sits close enough to the
+    # physical warehouse mesh that the collision-focus camera clips through it).
+    - [3.0, 7.0, 0.5]
+    - [8.0, 3.0, 0.4]
+    - [15.0, 10.0, 0.5]
+    - [12.0, 12.0, 0.45]
+    # Close to robot 1's spawn (2,10), along its actual frontier goal
+    # direction (4.35, 8.55) -- confirmed via debug print. Robot 1's spawn is
+    # mid-wall, away from any warehouse corner, so the collision-focus camera
+    # gets a clean shot here (unlike anything near robot 0's spawn at (2,2)).
+    - [2.51, 9.685, 0.35]
+
+controller:
+  pos: "mpc_cbf"
+  att: "visibility_area"
+  gatekeeper:
+    nominal: "visibility_area"
+    backup: "velocity_tracking_yaw"
+    nominal_horizon: 0.4
+    backup_horizon: 1.8
+    braking_margin: 0.9
+
+robots:
+  common:
+    model: "DoubleIntegrator2D"
+    radius: 0.25
+    v_max: 1.35
+    a_max: 1.9
+    fov_angle: 60.0
+    cam_range: 4.0
+    mpc_horizon: 10
+    mpc_cbf_alpha1: 0.55
+    mpc_cbf_alpha2: 0.55
+  instances:
+    - robot_id: 0
+      x0: [2.0, 2.0, 0.0]
+    - robot_id: 1
+      x0: [2.0, 10.0, 0.0]

@@ -1,0 +1,46 @@
+experiment:
+  name: EXP_01_blind_corner_visibilityarea
+  dt: 0.05
+  exploration_algorithm: CoScan
+  show_animation: false
+  save_animation: false
+  max_ticks: 5000
+
+environment:
+  width: 20.0
+  height: 18.0
+  resolution: 0.1
+
+  circles:
+    - [6.0, 2.0, 0.6]
+    - [6.0, 3.5, 0.6]
+    - [6.0, 5.0, 0.6]
+
+  # Known walls to create an L-shaped corridor
+  superellipsoids:
+    - [10.0, 5.0, 10.0, 0.5, 10.0, 0.0]      # Horizontal Wall (Bottom)
+    - [5.0, 10.0, 0.5, 5.0, 10.0, 0.0]       # Vertical Wall (Left)
+    - [10.0, 15.0, 5.0, 0.5, 10.0, 0.0]      # Horizontal Wall (Top)
+  
+  # The "Trap": An unknown obstacle right around the bend
+  unknown_obstacles:
+    - [7.0, 7.0, 0.6] # This is hidden from the start position
+
+robots:
+  common:
+    model: DoubleIntegrator2D
+    sensor: rgbd
+    exploration: true
+    reached_threshold: 2.0
+    radius: 0.25
+    cam_range: 4.0
+    fov_angle: 60.0
+  instances:
+    - robot_id: 0
+      x0: [2.0, 2.0, 0.0, 0.0, 0.0]
+    - robot_id: 1
+      x0: [2.0, 10.0, 0.0, 0.0, 0.0]
+
+controller:
+  pos: mpc_cbf
+  att: visibility_area

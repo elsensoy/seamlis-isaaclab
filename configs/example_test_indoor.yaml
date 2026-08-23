@@ -1,0 +1,76 @@
+# General Experiment Settings
+experiment_name: "Indoor_Stress_Test_v1"
+dt: 0.1
+tf: 300.0
+exploration_algorithm: "Frontier"
+show_animation: True
+max_ticks: 10000
+
+# Environment Layout (24x18 Indoor)
+environment:
+  width: 24.0
+  height: 18.0
+  resolution: 0.16
+  use_default_layout: False
+  
+  # Known circular obstacles
+  circles:
+    - [1.96, 3.57, 0.54]
+    - [1.67, 14.68, 0.45]
+    - [10.15, 6.19, 0.41]
+    - [11.17, 13.71, 0.54]
+    - [12.84, 5.67, 0.38]
+    - [17.85, 6.67, 0.46]
+    - [20.74, 14.66, 0.51]
+    - [19.49, 9.76, 0.31]
+
+  # Indoor Walls (Pre-calculated from  _vertical_wall functions)
+  # Format: [x, y, half_width, half_height, angle, eps1, eps2]
+  # Using eps=0.1 to ensure sharp rectangular corners for walls
+  superellipsoids:
+    - [16.0, 0.6, 0.35, 0.6, 0.0, 0.1, 0.1]    # Lower Vertical Wall
+    - [16.0, 7.3, 0.35, 6.1, 0.0, 0.1, 0.1]    # Mid Vertical Wall
+    - [16.0, 16.0, 0.35, 1.2, 0.0, 0.1, 0.1]   # Upper Vertical Wall
+    - [3.5, 13.0, 2.3, 0.35, 0.0, 0.1, 0.1]    # Horizontal Wall Seg 1
+    - [6.4, 13.0, 0.6, 0.35, 0.0, 0.1, 0.1]    # Horizontal Wall Seg 2
+
+  # Unknown Obstacles (The "Stress" Profile)
+  # Format: [x, y, radius]
+  unknown_obstacles:
+    - [11.36, 8.33, 0.35]
+    - [7.62, 8.82, 0.28]
+    - [14.61, 10.84, 0.27]
+    - [3.61, 7.95, 0.35]
+    - [11.05, 11.23, 0.34]
+    - [5.01, 5.81, 0.32] # The deadlock-prone one
+
+# Global Controller Settings
+controller:
+  pos: "mpc_cbf"
+  att: "gatekeeper"
+  gatekeeper:
+    nominal: "visibility_area"
+    backup: "velocity_tracking_yaw"
+    nominal_horizon: 0.4
+    backup_horizon: 1.8
+    braking_margin: 0.9
+
+# Robot Definitions
+robots:
+  common:
+    model: "DoubleIntegrator2D"
+    radius: 0.15
+    v_max: 1.35
+    a_max: 1.9
+    fov_angle: 70.0
+    cam_range: 3.5
+    mpc_horizon: 10
+    mpc_cbf_alpha1: 0.55
+    mpc_cbf_alpha2: 0.55
+  instances:
+    - robot_id: 0
+      x0: [2.0, 2.0, 0.0]        # Bottom Left
+    - robot_id: 1
+      x0: [2.0, 16.0, 0.0]     # Top Left, facing South
+    - robot_id: 2
+      x0: [22.0, 4.0, 0.0]      # Bottom Right, facing West
