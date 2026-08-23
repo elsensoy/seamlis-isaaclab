@@ -223,7 +223,7 @@ controller:
   (`global -> robot 0 -> robot 1 -> ... -> global -> ...`), so a long `--viz kit` run
   periodically returns to the birdview instead of only showing it once at startup.
 * **Trajectory traces:** Each robot's followed path is drawn as a persistent, semi-transparent
-  colored line in the Isaac viewport, matching that robot's FoV mesh color — useful for
+  colored line in the Isaac viewport, matching that robot's FoV mesh color -- useful for
   screenshots/video without needing the Matplotlib UI. Purely cosmetic; only renders when the
   full Kit viewport extensions are loaded (`--viz kit`), so it's automatically skipped (not an
   error) on headless runs. Controlled via `ExploreAdapter(..., draw_trails=True)` in
@@ -234,15 +234,15 @@ controller:
 
 * **`logs/comparison_results.csv`**: Master summary of all runs (collisions, time, success rate).
   Written by `ExperimentLogger`, which is **disabled by default** (see `logger = None` in
-  `scripts/run_isaac.py`) — enable it there if you need frame-level pose logging too.
+  `scripts/run_isaac.py`) -- enable it there if you need frame-level pose logging too.
 * **`logs/<experiment_name>/pose_log.csv`**: Frame-by-frame trajectory data, also gated behind
   `ExperimentLogger`.
 
 ### 3. Collision & Detection Summary (`logs/collision_summary.csv`)
 
 The main log for **comparing algorithm robustness across runs**. One row is appended per run,
-independent of `ExperimentLogger` above, so it's written for every run — headless or `--viz
-kit` — with no extra setup. Safe to run many experiments back to back and load the whole file
+independent of `ExperimentLogger` above, so it's written for every run -- headless or `--viz
+kit` -- with no extra setup. Safe to run many experiments back to back and load the whole file
 into a spreadsheet or pandas afterward.
 
 | Column | Meaning |
@@ -252,7 +252,7 @@ into a spreadsheet or pandas afterward.
 | `num_drones` | Number of robot instances in the run. |
 | `known_obstacles` | Count of known (map-given) obstacles. |
 | `unknown_obstacles` | Count of hidden obstacles the robots must discover. |
-| `unknown_obstacles_detected_pct` | % of `unknown_obstacles` seen by *at least one* robot by run end — aggregated across all robots' `detected_unknown_obs_memory` and matched against the config's ground-truth obstacle positions. |
+| `unknown_obstacles_detected_pct` | % of `unknown_obstacles` seen by *at least one* robot by run end -- aggregated across all robots' `detected_unknown_obs_memory` and matched against the config's ground-truth obstacle positions. |
 | `lidar_enabled` | Whether `--use-rtx-lidar` was passed. |
 | `collisions` | Total collision count across all robots (`ExploreAdapter.total_collisions`). |
 | `collisions_per_robot` | Per-robot breakdown, e.g. `[0, 1, 0]`. |
@@ -512,59 +512,6 @@ We categorize experiments into three tiers.(see test.md under scripts/):
 | **Validation** | `VAL_` | Sanity checks for physics and collision logic. | `test_5_start_in_contact.yaml` |
 | **Comparison** | `CMP_` | Direct A/B testing of Gatekeeper vs Baselines. | `test_10_gatekeeper_unknown.yaml` |
 
-### Headless Safety Benchmark Suite
-
-The headless benchmark suite compares exploration and attitude-control choices
-on four repeatable safety scenarios:
-
-* **Indoor stress:** three robots, walls, known obstacles, and hidden obstacles.
-* **Blind corner:** a hidden obstacle immediately beyond an occluding turn.
-* **Decentralized hidden obstacle:** two robots acquire different local obstacle knowledge.
-* **Small-FoV zigzag:** repeated turns and hidden obstacles stress blind-side motion.
-
-Every scenario can be evaluated with both `Frontier` and `CoScan` exploration
-and these attitude policies:
-
-* `simple` - constant yaw rate.
-* `visibility_area` - visibility-promoting yaw.
-* `velocity_tracking_yaw` - aligns the sensor with robot velocity.
-* `gatekeeper` - switches between visibility-promoting and velocity-tracking yaw.
-
-The suite runs without Matplotlib or an Isaac viewport. From the project
-container, run the complete 32-case matrix with:
-
-```bash
-python3 examples/benchmark_config_suite.py
-```
-
-Run a short Gatekeeper-versus-visibility smoke test with:
-
-```bash
-python3 examples/benchmark_config_suite.py \
-  --scenario blind_corner \
-  --algorithm Frontier \
-  --attitude visibility_area \
-  --attitude gatekeeper \
-  --max-steps 20 \
-  --output-dir output/headless_safety_smoke
-```
-
-Results are written to `output/headless_safety_benchmark/` as:
-
-* `raw_results.csv` - one row per run, including seed and termination details.
-* `summary.csv` - rates and averages grouped by scenario, algorithm, and policy.
-* `summary.md` - the same summary as a readable Markdown table.
-
-The main metrics are success rate, physical collision rate, optimizer
-infeasibility rate, timeout rate, mean visibility violations per robot,
-coverage, and completion time over successful runs. Collisions are deliberately
-reported separately from solver infeasibility so a numerical controller failure
-is not mislabeled as physical contact.
-
-The suite definition and scenario YAML files are under
-`configs/benchmarks/headless_safety/`. See that directory's `README.md` for filters,
-repeats, output options, and configuration validation commands.
-
 ### Drone Spawn Smoke Test
 
 Use the standalone test to verify that `drone_articulation.usd` loads as an
@@ -627,8 +574,8 @@ What stays exactly the same:
 - The robot's avoidance behavior, paths, everything the planner does
 
 What actually changes:
-- A real RTX Lidar sensor prim gets attached to each drone (scripts/sensor.py), producing a live point cloud — but nothing in the pipeline reads it
-- Higher GPU/render cost (heavier — that's why it's mutually exclusive with --low-memory in the CLI)
+- A real RTX Lidar sensor prim gets attached to each drone (scripts/sensor.py), producing a live point cloud -- but nothing in the pipeline reads it
+- Higher GPU/render cost (heavier -- that's why it's mutually exclusive with --low-memory in the CLI)
 - The lidar_enabled column in collision_summary.csv flips to True (pure metadata, doesn't affect any other column's value)
 - If debug_print() gets called, you'd see a point count printed
 
@@ -668,7 +615,7 @@ The startup log should contain a line similar to:
 Then check the red boundary lines and survey poles in the Isaac viewport:
 
 > The red boundary lines are **disabled by default** now that the warehouse/env_handler
-> alignment is verified (commented out in `run_isaac.py`, search `spawn_boundary_lines`) —
+> alignment is verified (commented out in `run_isaac.py`, search `spawn_boundary_lines`) --
 > uncomment that call to bring them back for this kind of alignment debugging.
 
 * The poles define the same rectangle as the planner workspace.
@@ -685,4 +632,4 @@ python3 -m py_compile /workspace/seamlis/scripts/scene.py \
 
 
 
-### for a comparison run, please run run_comparison.sh in the docker container. Then run plot_results.py. (in progress)
+### for a comparison run, please run run_comparison.sh in the docker container. 
