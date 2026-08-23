@@ -330,7 +330,11 @@ https://github.com/user-attachments/assets/b0485d58-8fe1-48b9-b580-fce7b974eb8b
 
 https://github.com/user-attachments/assets/13e2e7bb-ff4a-4fb4-9b6c-547be2ae8965
 
-#### Small-FoV comparison
+**VAL_02 Blind Corner Gatekeeper (with UI enabled)**
+
+https://github.com/user-attachments/assets/9a3e6a38-600f-4932-988e-bdb58bb4bbad
+
+#### Small-FoV comparison**
 
 **Gatekeeper**
 
