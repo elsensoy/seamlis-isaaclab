@@ -306,11 +306,11 @@ https://github.com/user-attachments/assets/4d475aaf-f3be-4449-9e48-c280188a8de6
 
 https://github.com/user-attachments/assets/b1c2ea35-c483-46d7-9f44-7784dde046d1
 
-**EXP_02 Narrow gateway -- Gatekeeper**
+**EXP_02 Narrow gateway -- Gatekeeper (speedup)**
 
 https://github.com/user-attachments/assets/3bec8ebd-9545-4577-98ec-9fc47badb6f2
 
-**EXP_02 Narrow gateway -- Visibility area**
+**EXP_02 Narrow gateway -- Visibility area (speedup)**
 
 https://github.com/user-attachments/assets/802324e5-6484-4562-8a35-518044c8ea28
 
