@@ -3,7 +3,7 @@
 
 <a id="top"></a>
 
-# seamlis
+# SEAMLIS
 
 `seamlis` is a **safe exploration and mapping framework** utilizing [`safe_control`](https://www.google.com/search?q=%5Bhttps://github.com/tkkim-robot/safe_control%5D(https://github.com/tkkim-robot/safe_control)) for 2D planning and **Isaac Lab / Isaac Sim** for photorealistic, GPU-accelerated 3D simulation.
 
